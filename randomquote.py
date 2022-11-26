@@ -19,7 +19,7 @@ logger.setLevel(logging.INFO)
 # Get Quote
 logger.info("getting quote")
 def get_quote():
-    url = "https://api.quotable.io/random"
+    url = "https://api.quotable.io/random?tags=famous-quotes,wisdom"
 
     try:
         response = requests.get(url)
@@ -27,15 +27,17 @@ def get_quote():
         logger.info("Error while calling API...")
     res = json.loads(response.text)
     print(res)
-    return res['content'] + " - " + res['author']
+    return res['content'] + "\r\n" + res['author']
 
-
+# Build Image
 logger.info("making image")
 toot = get_quote()
 QuotePic.get_wallpaper(toot)
 logger.info("sleeping")
 time.sleep(3)
+
+# Toot Toot
 media = mastodon.media_post("created_image.png")
 logger.info("tooting quote")
 
-mastodon.status_post("Random Quote of the day!", media_ids=media)
+mastodon.status_post("",media_ids=media)
